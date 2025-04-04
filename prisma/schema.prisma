@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model users {
+//   id        Int     @id @default(autoincrement())
+//   uuid      String  @unique @default(uuid())
+//   email     String  @unique
+//   password  String?
+//   is_active Boolean @default(true)
+//   role      String?
+// }
+
+enum Status {
+  provisioning
+  success
+  failed
+}
+
+model provision {
+  uuid           String @id @default(uuid())
+  workspace_uuid String
+  name           String
+  description    String
+  slug           String
+  app_uuid       String
+  mau            String
+
+  workspace        workspace         @relation(fields: [workspace_uuid], references: [uuid])
+  app              application       @relation(fields: [app_uuid], references: [uuid])
+  provision_status provision_status?
+
+  @@index([workspace_uuid])
+  @@index([app_uuid])
+}
+
+model application {
+  uuid String @id @default(uuid())
+  name String
+
+  provision        provision[]
+}
+
+model user_workspace {
+  uuid           String @id @default(uuid())
+  zuuid          String
+  workspace_uuid String
+
+  workspace workspace @relation(fields: [workspace_uuid], references: [uuid])
+}
+
+model workspace {
+  uuid        String @id @default(uuid())
+  name        String
+  description String
+
+  provisions      provision[]
+  user_workspaces user_workspace[]
+}
+
+model provision_status {
+  uuid               String @id @default(uuid())
+  provision_uuid     String @unique
+  provision_res_uuid String
+  status             Status
+  message            String
+  domain             String
+
+  provision provision   @relation(fields: [provision_uuid], references: [uuid])
+
+  @@index([provision_uuid])
+}
+
+model server_info {
+  uuid                String @id @default(uuid())
+  ip                  String
+  last_allocated_port String
+  vCpu                String
+  ram                 String
+  ssh_access_key      String
+}

@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8f9fa; 
+  --foreground: #343a40; 
+  --font-work_sans: 'Work Sans';
+  --btn: rgb(49, 122, 49);
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* width: 100vw;  */
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar {
+  width:300px;
+  background-color: #51fd4e; 
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.no-sidebar{
+  display: none;
+}
+
+a{
+  text-decoration: underline;
+  color:blue;
+}
+
